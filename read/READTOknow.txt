@@ -1,4 +1,5 @@
-Para no crear tres carpetas distintas que solo me va a utilizar más procesos y no me va a rrendir porque me voy a equivocar. Todos los main's van a sacar informacion de la misma bbdd
+Para no crear tres carpetas distintas que solo me va a utilizar más procesos y no me va a rrendir porque me
+voy a equivocar. Todos los main's van a sacar informacion de la misma bbdd
 
 Main.py -> El que se puede editar agusto, teniendo de base el primero codigo que creamos
 Main1.py -> el primer video que vimos en el que crea los frame y labels todo en un mismo archivo 
