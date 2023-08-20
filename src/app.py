@@ -3,7 +3,7 @@ from tkinter import ttk
 import pymysql
 from cliente_dialog import ClienteDialog
 from pes_productos import ProductoApp
-#from pes_compra import CompraApp
+from pes_compra import CompraApp
 from consultas_sql import ConexionDB
 from tkinter import messagebox
 
@@ -13,7 +13,7 @@ class ClienteApp:
     def __init__(self, root):
         self.wind = root
         self.wind.title("Control de Stock")
-        self.wind.geometry("1000x500")
+        self.wind.geometry("1100x500")
         self.wind.config(bg="indian red")
         self.wind.resizable(True, True)
 
@@ -21,16 +21,16 @@ class ClienteApp:
 
         self.crear_pestana_clientes()
         self.crear_pestana_productos()
-        #self.crear_pestana_compras()
+        self.crear_pestana_compras()
 
         self.cuaderno1.pack(fill="both", expand=True, padx=10, pady=15)
 
     def crear_pestana_clientes(self):
         pestana_clientes = ttk.Frame(self.cuaderno1)
         self.cuaderno1.add(pestana_clientes, text="Clientes")
-
+        
         frame1 = tk.LabelFrame(pestana_clientes, text="Consulta Del Cliente", font=("calibri",), relief=tk.SUNKEN)
-        frame1.pack(fill="both", expand="yes", padx=20, pady=3)
+        frame1.pack(fill="both", expand="yes", padx=0, pady=3)
         frame2 = tk.LabelFrame(pestana_clientes, text="Datos Del Cliente", font=("calibri", 14), relief=tk.SUNKEN)
         frame2.pack(fill="both", expand="yes", padx=20, pady=20)
 
@@ -84,8 +84,8 @@ class ClienteApp:
     def crear_pestana_productos(self):
         ProductoApp(self, self.cuaderno1)
     
-    #def crear_pestana_clientes(self):
-    #    CompraApp(self, self.cuaderno1)
+    def crear_pestana_compras(self):
+        CompraApp(self, self.cuaderno1)
     
     def actualizar(self):
         try:

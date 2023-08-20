@@ -46,4 +46,15 @@ class ConexionDB:
         self.cursor.execute(query)
         rows = self.cursor.fetchall()
         self.parent.vista(rows)
-        
+    
+    def eliminar_compra(self, values):
+        compra_id = values[0]  # Accede al primer elemento de la tupla 'values'
+        self.cursor.execute("DELETE FROM compra WHERE ID = %s", (compra_id,))
+        self.conexion.commit()  # Realiza el commit después de la operación de eliminación
+        messagebox.showinfo("compra Eliminado", "La compra ha sido eliminado exitosamente.")
+    
+    def actualizar_compra(self):
+        query = "SELECT ID, id_cliente, id_producto, fecha_compra, cantidad FROM compra"
+        self.cursor.execute(query)
+        rows = self.cursor.fetchall()
+        self.parent.vista(rows)

@@ -32,7 +32,7 @@ class ProductoDialog:
         if item: 
             self.Fecha_vencimiento = DateEntry(frame)
         else:    
-            self.Fecha_vencimiento = DateEntry(frame, selectmode='day',year=2023,month=8,day=27)
+            self.Fecha_vencimiento = DateEntry(frame, date_pattern='yyyy/mm/dd')
         
         self.Fecha_vencimiento.grid(row=3, column=1)
         
