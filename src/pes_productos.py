@@ -5,7 +5,7 @@ from producto_dialog import ProductoDialog
 from consultas_sql import ConexionDB
 from tkinter import messagebox
 
-class ProductoApp(ttk.Frame):
+class ProductoApp:
     def __init__(self, parent, cuaderno1):
         self.parent = parent
         self.cuaderno1 = cuaderno1
@@ -24,11 +24,11 @@ class ProductoApp(ttk.Frame):
         self.Cantidad = tk.StringVar()
         self.Fecha_vencimiento = tk.StringVar()
         
-        
-        
-        ##CONSULTA
+        """
+        # CONSULTA
          # Elementos
-        """lbl = tk.Label(frame1, text="Consulta")
+
+        lbl = tk.Label(frame1, text="Consulta")
         lbl.pack(side=tk.LEFT)
         self.q = tk.StringVar()
         ent = tk.Entry(frame1, textvariable=self.q)
@@ -47,9 +47,8 @@ class ProductoApp(ttk.Frame):
             selection = self.combo.get()
             messagebox.showinfo(title="Seleccionado", message=selection)
 
-        self.combo.bind("<<ComboboxSelected>>", selection_choose)
-        """
-        
+        self.combo.bind("<<ComboboxSelected>>", selection_choose)"""
+
             # ComboBox
         self.combo = ttk.Combobox(frame1, values=['','id', 'nombre', 'cantidad', 'Fecha_vencimiento'], state='readonly')
         self.combo.pack(side=tk.LEFT, padx=2)
@@ -104,12 +103,12 @@ class ProductoApp(ttk.Frame):
                 self.conexion.close()
 
             
-    def editar_datos(self, event):
+    def editar_datos(self,item):
         item = self.trv.focus()
-        ProductoDialog(self, item)
+        ProductoDialog(self.parent, self, item)
 
     def abrir_ventana_agregar_editar(self):
-        ProductoDialog(self)
+        ProductoDialog(self.parent, self)
         
     def vista(self, rows):
         self.trv.delete(*self.trv.get_children())

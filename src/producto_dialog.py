@@ -2,14 +2,15 @@ import tkinter as tk
 from tkinter import messagebox
 from tkcalendar import *
 from tkcalendar import DateEntry
-from datetime import datetime
+#from datetime import datetime
 import pymysql
 
 class ProductoDialog:
-    def __init__(self, parent, item=None, callback=None):
+    def __init__(self, parent, parent_producto, item=None, callback=None):
         self.parent = parent
+        self.parent_producto = parent_producto
         self.callback = callback
-        self.dialog = tk.Toplevel(parent.parent.wind)
+        self.dialog = tk.Toplevel(self.parent.parent)
         self.dialog.title("Agregar/Editar Producto")
         self.dialog.geometry("400x250")
 
@@ -40,7 +41,7 @@ class ProductoDialog:
         btn_frame.pack(pady=20)
 
         if item:
-            values = self.parent.trv.item(item, 'values')
+            values = self.parent_producto.trv.item(item, 'values')
             self.ID.insert(tk.END, values[0])
             self.Nombre.insert(tk.END, values[1])
             self.Cantidad.insert(tk.END, values[2])
@@ -53,8 +54,7 @@ class ProductoDialog:
 
         tk.Button(btn_frame, text="Cancelar", command=self.dialog.destroy).pack(side=tk.LEFT, padx=10)
         
-
-
+        
     def guardar_datos(self):
         if self.Nombre.get() == "" or self.Cantidad.get() == "":
             messagebox.showerror("Control de Stock", "Ingrese información en todos los campos")
@@ -79,7 +79,7 @@ class ProductoDialog:
             if self.callback:
                 self.callback()
 
-            self.parent.restablecer()
+            self.parent_producto.actualizar()
             self.dialog.destroy()
     
     
@@ -107,7 +107,6 @@ class ProductoDialog:
             if self.callback:
                 self.callback()
 
-            self.parent.restablecer()
+            self.parent_producto.actualizar()
             self.dialog.destroy()           
-            
-    
+   

@@ -6,15 +6,16 @@ from datetime import datetime
 import pymysql
 
 class CompraDialog:
-    def __init__(self, parent, item=None, callback=None):
+    def __init__(self, parent, parent_compra, item=None, callback=None):
         self.parent = parent
+        self.parent_compra = parent_compra
         self.callback = callback
-        self.dialog = tk.Toplevel(parent.parent.wind)
-        self.dialog.title("Agregar/Editar Producto")
+        self.dialog = tk.Toplevel(self.parent.parent)
+        self.dialog.title("Agregar/Editar Compra")
         self.dialog.geometry("380x350")
 
         frame = tk.Frame(self.dialog)
-        frame.pack(pady=70)
+        frame.pack(pady=60)
 
         tk.Label(frame, text="ID compra:").grid(row=0, column=0, sticky="e")
         self.ID = tk.Entry(frame)
@@ -28,50 +29,53 @@ class CompraDialog:
         self.ID_producto = tk.Entry(frame)
         self.ID_producto.grid(row=2, column=1)
         
-
-        tk.Label(frame, text="Fecha compra:").grid(row=3, column=0, sticky="e")
-        self.Fecha_compra = DateEntry(frame, date_pattern='yyyy/mm/dd')
-        
-        self.Fecha_compra.grid(row=3, column=1)
-        
-        
-        tk.Label(frame, text="Cantidad:").grid(row=4, column=0, sticky="e")
+        tk.Label(frame, text="Cantidad:").grid(row=3, column=0, sticky="e")
         self.Cantidad = tk.Entry(frame)
-        self.Cantidad.grid(row=4, column=1)
+        self.Cantidad.grid(row=3, column=1)
+
+        tk.Label(frame, text="Fecha compra:").grid(row=4, column=0, sticky="e")
+        
+        if item:
+            self.Fecha_compra = DateEntry(frame)
+        else:
+            self.Fecha_compra = DateEntry(frame, date_pattern='yyyy/mm/dd')
+        
+        self.Fecha_compra.grid(row=4, column=1)
         
         btn_frame = tk.Frame(self.dialog)
         btn_frame.pack(pady=10)
 
         if item:
-            values = self.parent.trv.item(item, 'values')
+            values = self.parent_compra.trv.item(item, 'values')
             self.ID.insert(tk.END, values[0])
             self.ID_cliente.insert(tk.END, values[1])
             self.ID_producto.insert(tk.END, values[2])
+            self.Cantidad.insert(tk.END, values[3])
             self.Fecha_compra.delete(0, tk.END)
-            self.Fecha_compra.insert(tk.END, values[3])
-            self.Cantidad.insert(tk.END, values[4])
+            self.Fecha_compra.insert(tk.END, values[4])
+            
 
             tk.Button(btn_frame, text="Actualizar", command=self.modificar_datos).pack(side=tk.LEFT, padx=10)
         else:
             tk.Button(btn_frame, text="Agregar", command=self.guardar_datos).pack(side=tk.LEFT, padx=10)
 
         tk.Button(btn_frame, text="Cancelar", command=self.dialog.destroy).pack(side=tk.LEFT, padx=10)
-        
+      
     """def exist_id_cliente(self, id_cliente):
-        schemacs = pymysql.connect(host="localhost", user="root", password="123456", database="schemacs")
-        cursor = schemacs.cursor()
-        cursor.execute("SELECT * FROM cliente WHERE ID=%s", (id_cliente,))
-        result = cursor.fetchone()
-        schemacs.close()
-        if result:
-            return True
+            schemacs = pymysql.connect(host="localhost", user="root", password="123456", database="schemacs")
+            cursor = schemacs.cursor()
+            cursor.execute("SELECT * FROM cliente WHERE ID=%s", (id_cliente,))
+            result = cursor.fetchone()
+            schemacs.close()
+            if result:
+                return True
     """
+
     def exist_id (self, id_cliente, id_producto):
         schemacs = pymysql.connect(host="localhost", user="root", password="123456", database="schemacs")
         cursor = schemacs.cursor()
         cursor.execute("SELECT * FROM cliente, producto WHERE cliente.ID=%s AND producto.ID=%s", (id_cliente, id_producto))
         result = cursor.fetchone()
-        
         schemacs.close()
         if result:
             return True
@@ -94,12 +98,11 @@ class CompraDialog:
             schemacs = pymysql.connect(host="localhost", user="root", password="123456", database="schemacs")
             cursor = schemacs.cursor()
 
-            cursor.execute("INSERT INTO compra (id_cliente, id_producto, fecha_compra, cantidad,) VALUES (%s, %s, %s, %s)", (
+            cursor.execute("INSERT INTO compra (id_cliente, id_producto, cantidad, fecha_compra) VALUES (%s, %s, %s, %s)", (
                 codigo_cliente,
                 codigo_producto,
-                fecha_mysql,
                 self.Cantidad.get(),
-                
+                fecha_mysql,
             ))
             messagebox.showinfo("Datos Completados", "Se agregaron correctamente")
 
@@ -109,7 +112,7 @@ class CompraDialog:
             if self.callback:
                 self.callback()
 
-            self.parent.restablecer()
+            self.parent_compra.actualizar()
             self.dialog.destroy()
     
     
@@ -130,11 +133,11 @@ class CompraDialog:
             fecha_seleccionada = self.Fecha_compra.get_date()
             fecha_mysql = fecha_seleccionada.strftime('%Y-%m-%d')
             
-            cursor.execute("UPDATE compra SET id_cliente=%s, id_producto=%s, Fecha_compra=%s, Cantidad=%s WHERE ID=%s", (
+            cursor.execute("UPDATE compra SET id_cliente=%s, id_producto=%s, Cantidad=%s, Fecha_compra=%s WHERE ID=%s", (
                 codigo_cliente,
                 codigo_producto,
-                fecha_mysql,
                 self.Cantidad.get(),
+                fecha_mysql,
                 self.ID.get(),
             ))
             messagebox.showinfo("Datos Completados", "Se actualizaron correctamente")
@@ -145,7 +148,5 @@ class CompraDialog:
             if self.callback:
                 self.callback()
 
-            self.parent.restablecer()
+            self.parent_compra.actualizar()
             self.dialog.destroy()           
-            
-    

@@ -6,7 +6,7 @@ from consultas_sql import ConexionDB
 from tkinter import messagebox
 
 class CompraApp:
-    def __init__(self, parent, cuaderno1):
+    def __init__(self, parent,  cuaderno1):
         self.parent = parent
         self.cuaderno1 = cuaderno1
         pestana_compra = tk.Frame(self.cuaderno1)
@@ -32,10 +32,8 @@ class CompraApp:
         self.trv.heading(1, text="ID ")
         self.trv.heading(2, text="ID Cliente")
         self.trv.heading(3, text="ID Producto")
-        self.trv.heading(4, text="Fecha_compra")
-        self.trv.heading(5, text="Cantidad")
-        
-        
+        self.trv.heading(4, text="Cantidad")
+        self.trv.heading(5, text="Fecha_compra")
         self.trv.bind("<Double-Button-1>", self.editar_datos)
         
         # Elementos
@@ -59,10 +57,10 @@ class CompraApp:
     
     def editar_datos(self, event):
         item = self.trv.focus()
-        CompraDialog(self, item)
+        CompraDialog(self.parent, self, item)
         
     def abrir_ventana_agregar_editar(self):
-        CompraDialog(self)
+        CompraDialog(self.parent, self)
     
     def vista(self, rows):
         self.trv.delete(*self.trv.get_children())
@@ -99,6 +97,3 @@ class CompraApp:
                     messagebox.showerror("Error", f"No se pudo eliminar el compra: {str(e)}")
         else:
             messagebox.showerror("Eliminar compra", "No ha seleccionado ningun compra")
-    
-
-

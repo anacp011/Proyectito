@@ -3,10 +3,11 @@ from tkinter import messagebox
 import pymysql
 
 class ClienteDialog:
-    def __init__(self, parent, item=None, callback=None):
+    def __init__(self, parent, parent_cliente, item=None, callback=None):
         self.parent = parent
+        self.parent_cliente = parent_cliente
         self.callback = callback
-        self.dialog = tk.Toplevel(parent.wind)
+        self.dialog = tk.Toplevel(self.parent)
         self.dialog.title("Agregar/Editar Cliente")
         self.dialog.geometry("400x250")
 
@@ -30,7 +31,7 @@ class ClienteDialog:
         btn_frame.pack(pady=20)
 
         if item:
-            values = self.parent.trv.item(item, 'values')
+            values = self.parent_cliente.trv.item(item, 'values')
             self.ID.insert(tk.END, values[0])
             self.Nombre.insert(tk.END, values[1])
             self.Apellido.insert(tk.END, values[2])
@@ -62,7 +63,7 @@ class ClienteDialog:
             if self.callback:
                 self.callback()
 
-            self.parent.restablecer()
+            self.parent_cliente.restablecer()
             self.dialog.destroy()
 
     def modificar_datos(self):
@@ -86,5 +87,5 @@ class ClienteDialog:
             if self.callback:
                 self.callback()
 
-            self.parent.restablecer()
+            self.parent_cliente.restablecer()
             self.dialog.destroy()           
